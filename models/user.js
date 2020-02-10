@@ -1,18 +1,24 @@
 const mongoose = require('mongoose');
 
 let userSchema = new mongoose.Schema({
-    name: {
+    firstname: {
         type: 'string',
-        required: 'You need to specifie a name'
+        required: 'You need to specify a name'
     },
+
+    lastname: {
+        type: 'string', 
+        require: 'You need to specify a lastname'
+    },
+
     email: {
         type: 'string',
-        required: 'You need to specifie a email',
+        required: 'You need to specify an email',
         unique: true
     },
     password: {
         type: 'string',
-        required: 'You need to specifie a password'
+        required: 'You need to specify a password'
     }
 });
 
