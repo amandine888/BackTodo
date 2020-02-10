@@ -14,6 +14,8 @@ mongoose.connect('mongodb://localhost/todoList', {useNewUrlParser: true, useUnif
 
 // Récuperation des models
 let User = require('./models/user');
+let List = require('./models/list'); 
+let Task = require('./models/task')
 
 // Déclarations des routes de notre application
 app.route('/').get(function(req, res) {
