@@ -3,6 +3,7 @@
 const express = require('express'),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
+    bcrypt = require('bcrypt'), 
     app = express();
 
 // parse application/x-www-form-urlencoded
@@ -24,19 +25,20 @@ app.route('/').get(function(req, res) {
 
 //Route register + requête : 
 app.route ('/register').post(function(req, res){
-    // User.create({function(err, data){}})
-    let user = new User ({
-        firstname:  req.body.firstname, 
-        lastname:  req.body.lastname, 
-        password: req.body.password, 
-        email:  req.body.email,
+    bcrypt.hash(req.body.password, 10, function(err, hash) {
+        let user = new User ({
+            firstname:  req.body.firstname, 
+            lastname:  req.body.lastname, 
+            password: hash, 
+            email:  req.body.email,
+            }); 
+        user.save(function(err, data){
+            if(err)
+            res.send(err)
+            else{
+                res.send(data); 
+            }
         }); 
-    user.save(function(err, data){
-        if(err)
-        res.send(err)
-        else{
-            res.send(data); 
-        }
     }); 
     // res.send('Salut')
 });
@@ -46,13 +48,15 @@ app.route('/connexion').post(function(req, res){
     // res.send('Salut'),
     User.find({email: req.body.email}, function(err, data){
         if (data){
-            res.send(data)
-        }
-        else{
-            res.send ('Error' + err); 
-        }
-    });
+            bcrypt.compare(req.body.password, data.password, function(err, result) {
+                if (result)
+                res.send(data);
+            else
+                res.send('error : ' + err);
+            }); 
+        }; 
     }); 
+});
 
 // Route créer une liste : 
 app.route('/list').post(function(req, res){
