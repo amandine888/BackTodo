@@ -9,13 +9,13 @@ let listSchema = new mongoose.Schema({
     //     type: 'string', 
     // }, 
 
-    nameList: {
+    namelist: {
         type: 'string', 
     },
 
     date: {
         type: 'date', 
-        default: 'Date.now', 
+        default: Date.now, 
     },
 
     userId: {

@@ -59,8 +59,18 @@ app.route('/connexion').post(function(req, res){
 });
 
 // Route créer une liste : 
-app.route('/list').post(function(req, res){
-    res.send('Une liste')
+app.route('/newlist').post(function(req, res){
+    let list = new List({
+        namelist: req.body.namelist, 
+    })
+    list.save(function(err, data){
+        if(err)
+            req.send(err)
+        else{
+            res.send(data)
+        }; 
+    }); 
+    // res.send('Une liste')
 }); 
 
 // Route mettre à jour une liste : 
