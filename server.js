@@ -22,9 +22,23 @@ app.route('/').get(function(req, res) {
     res.send('hello world !');
 });
 
-//Route register : 
+//Route register + requête : 
 app.route ('/user').post(function(req, res){
-    res.send('Salut')
+    // User.create({function(err, data){}})
+    const user = new User ({
+        firstname:  req.body.firstname, 
+        lastname:  req.body.lastname, 
+        password: req.body.password, 
+        email:  req.body.email,
+        }); 
+    user.save(function(err, data){
+        if(err)
+        res.send(err)
+        else{
+            res.send(data); 
+        }
+    }); 
+    // res.send('Salut')
 });
 
 // Route connection : 
