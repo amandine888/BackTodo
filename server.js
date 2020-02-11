@@ -23,9 +23,9 @@ app.route('/').get(function(req, res) {
 });
 
 //Route register + requête : 
-app.route ('/user').post(function(req, res){
+app.route ('/register').post(function(req, res){
     // User.create({function(err, data){}})
-    const user = new User ({
+    let user = new User ({
         firstname:  req.body.firstname, 
         lastname:  req.body.lastname, 
         password: req.body.password, 
@@ -41,14 +41,18 @@ app.route ('/user').post(function(req, res){
     // res.send('Salut')
 });
 
-// Route connection : 
-app.route('/user').get(function(req, res){
-    res.send('Salut'),
-    User.find({function(err, data){
-        const user = new User
-    }
-    })
-}); 
+// Route connexion : 
+app.route('/connexion').post(function(req, res){
+    // res.send('Salut'),
+    User.find({email: req.body.email}, function(err, data){
+        if (data){
+            res.send(data)
+        }
+        else{
+            res.send ('Error' + err); 
+        }
+    });
+    }); 
 
 // Route créer une liste : 
 app.route('/list').post(function(req, res){
