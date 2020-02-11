@@ -22,6 +22,49 @@ app.route('/').get(function(req, res) {
     res.send('hello world !');
 });
 
+//Route register : 
+app.route ('/user').post(function(req, res){
+    res.send('Salut')
+});
+
+// Route connection : 
+app.route('/user').get(function(req, res){
+    res.send('Salut'),
+    User.find({function(err, data){
+        const user = new User
+    }
+    })
+}); 
+
+// Route créer une liste : 
+app.route('/list').post(function(req, res){
+    res.send('Une liste')
+}); 
+
+// Route mettre à jour une liste : 
+app.route('/list').get(function(req, res){
+    res.send('Une liste')
+}); 
+
+// Route supprimer une liste : 
+app.route('/list').delete(function(req, res){
+    res.send('Une liste')
+}); 
+
+// Route pour créer une tâche : 
+app.route('/task').post(function(req, res){
+    res.send('Une tâche')
+}); 
+
+// Route pour mettre à jour une tâche : 
+app.route('/task').get(function(req, res){
+    res.send('Une tâche')
+}); 
+
+// Route pour supprimer une tâche : 
+app.route('/task').delete(function(req, res){
+    res.send('Une tâche')
+}); 
 
 // Mise en écoute de notre application (sur le port 3000)
 app.listen(3000);
