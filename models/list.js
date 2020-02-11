@@ -16,6 +16,14 @@ let listSchema = new mongoose.Schema({
     date: {
         type: 'date', 
         default: 'Date.now', 
+    },
+
+    userId: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'user'
+    }, 
+
+    taskId: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'task'
     }
 }); 
 
