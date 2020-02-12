@@ -30,7 +30,7 @@ app.route ('/register').post(function(req, res){
             firstname:  req.body.firstname, 
             lastname:  req.body.lastname, 
             password: hash, 
-            email:  req.body.email,
+            email:  req.body.email
             }); 
         user.save(function(err, data){
             if(err)
@@ -46,7 +46,7 @@ app.route ('/register').post(function(req, res){
 // Route connexion + requête : 
 app.route('/connexion').post(function(req, res){
     // res.send('Salut'),
-    User.find({email: req.body.email}, function(err, data){
+    User.findOne({email: req.body.email}, function(err, data){
         if (data){
             bcrypt.compare(req.body.password, data.password, function(err, result) {
                 if (result)
@@ -58,14 +58,15 @@ app.route('/connexion').post(function(req, res){
     }); 
 });
 
-// Route créer une liste requête : 
+// Route créer une liste + requête : 
 app.route('/newlist').post(function(req, res){
     let list = new List({
+        userId: req.body['userId[]'], 
         namelist: req.body.namelist, 
     })
     list.save(function(err, data){
         if(err)
-            req.send(err)
+            res.send(err)
         else{
             res.send(data)
         }; 
@@ -74,18 +75,28 @@ app.route('/newlist').post(function(req, res){
 }); 
 
 // Route pour chercher toutes les listes d'un user : 
-app.route('/listbyid').get(function(req, res){
+app.route('/listbyid/:id').get(function(req, res){
     List.findOne({_id: req.params.id}).populate('user').exec(function(err, data){
         if (err)
-            req.send(err)
+            res.send(err)
         else{
             res.send(data)
         }; 
         // console.log(List); 
     });
-})
+}); 
 
 // Route pour update l'user et rajouter la liste : 
+
+app.route('/userupdate').put(function(req, res){
+    User.updateOne({ _id: req.body.id }, { $set: { firstname: req.body.firstname } }, function(err, data){
+        if(err)
+        res.send(err)
+        else{
+            res.send(data); 
+        };
+    });
+    }); 
 
 // Route pour mettre à jour une liste : 
 app.route('/list').put(function(req, res){

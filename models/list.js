@@ -18,6 +18,10 @@ let listSchema = new mongoose.Schema({
         default: Date.now, 
     },
 
+    userId: [{
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
+    }], 
+
     taskId: {
         type: mongoose.Schema.Types.ObjectId, ref: 'task'
     }
