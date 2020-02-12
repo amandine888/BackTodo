@@ -59,6 +59,13 @@ app.route('/connexion').post(function(req, res){
     }); 
 });
 
+// Route pour trouver tous les users + requête: 
+app.route('/users').get(function(req, res){
+    User.find({}, function(err, data){
+        res.send(data); 
+    }); 
+}); 
+
 // Route créer une liste + requête : 
 app.route('/newlist').post(function(req, res){
     let list = new List({
@@ -73,6 +80,13 @@ app.route('/newlist').post(function(req, res){
         }; 
     }); 
     // res.send('Une liste')
+}); 
+
+// Route pour trouver toutes les listes : 
+app.route('/list').get(function(req, res){
+    List.find({}, function(err, data){
+        res.send(data); 
+    }); 
 }); 
 
 // Route pour chercher un user dans une liste: 
