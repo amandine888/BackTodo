@@ -22,9 +22,6 @@ let listSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'User'
     }], 
 
-    taskId: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'Task'
-    }
 }); 
 
 module.exports = mongoose.model('List', listSchema);
