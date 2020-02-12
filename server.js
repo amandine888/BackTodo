@@ -43,7 +43,7 @@ app.route ('/register').post(function(req, res){
     // res.send('Salut')
 });
 
-// Route connexion : 
+// Route connexion + requête : 
 app.route('/connexion').post(function(req, res){
     // res.send('Salut'),
     User.find({email: req.body.email}, function(err, data){
@@ -58,7 +58,7 @@ app.route('/connexion').post(function(req, res){
     }); 
 });
 
-// Route créer une liste : 
+// Route créer une liste requête : 
 app.route('/newlist').post(function(req, res){
     let list = new List({
         namelist: req.body.namelist, 
@@ -73,9 +73,23 @@ app.route('/newlist').post(function(req, res){
     // res.send('Une liste')
 }); 
 
-// Route mettre à jour une liste : 
-app.route('/list').get(function(req, res){
-    res.send('Une liste')
+// Route pour chercher toutes les listes d'un user : 
+app.route('/listbyid').get(function(req, res){
+    List.findOne({_id: req.params.id}).populate('user').exec(function(err, data){
+        if (err)
+            req.send(err)
+        else{
+            res.send(data)
+        }; 
+        // console.log(List); 
+    });
+})
+
+// Route pour update l'user et rajouter la liste : 
+
+// Route pour mettre à jour une liste : 
+app.route('/list').put(function(req, res){
+    res.updateOne({_id: req.body.id})
 }); 
 
 // Route supprimer une liste : 

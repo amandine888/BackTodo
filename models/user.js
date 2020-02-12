@@ -19,6 +19,10 @@ let userSchema = new mongoose.Schema({
     password: {
         type: 'string',
         required: 'You need to specify a password'
+    }, 
+
+    listId: {
+        type: mongoose.Schema.Types.ObjectId, ref: 'list'
     }
 });
 
