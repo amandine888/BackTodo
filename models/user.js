@@ -21,9 +21,9 @@ let userSchema = new mongoose.Schema({
         required: 'You need to specify a password'
     }, 
 
-    listId: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'list'
-    }
+    listId: [{
+        type: mongoose.Schema.Types.ObjectId, ref: 'List'
+    }]
 });
 
 module.exports = mongoose.model('User', userSchema);

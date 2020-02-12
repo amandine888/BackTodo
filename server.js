@@ -30,7 +30,8 @@ app.route ('/register').post(function(req, res){
             firstname:  req.body.firstname, 
             lastname:  req.body.lastname, 
             password: hash, 
-            email:  req.body.email
+            email:  req.body.email, 
+            listId: req.body['listId[]']
             }); 
         user.save(function(err, data){
             if(err)
@@ -74,7 +75,7 @@ app.route('/newlist').post(function(req, res){
     // res.send('Une liste')
 }); 
 
-// Route pour chercher toutes les listes d'un user : 
+// Route pour chercher un user dans une liste: 
 app.route('/listbyid/:id').get(function(req, res){
     List.findOne({_id: req.params.id}).populate('user').exec(function(err, data){
         if (err)
@@ -82,11 +83,21 @@ app.route('/listbyid/:id').get(function(req, res){
         else{
             res.send(data)
         }; 
-        // console.log(List); 
     });
 }); 
 
-// Route pour update l'user et rajouter la liste : 
+// Route pour chercher une liste dans un user: 
+app.route('/userbyid/:id').get(function(req, res){
+    User.findOne({_id: req.params.id}).populate('list').exec(function(err, data){
+        if (err)
+            res.send(err)
+        else{
+            res.send(data)
+    }; 
+    }); 
+}); 
+
+// Route pour update l'user: 
 
 app.route('/userupdate').put(function(req, res){
     User.updateOne({ _id: req.body.id }, { $set: { firstname: req.body.firstname } }, function(err, data){

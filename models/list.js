@@ -23,7 +23,7 @@ let listSchema = new mongoose.Schema({
     }], 
 
     taskId: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'task'
+        type: mongoose.Schema.Types.ObjectId, ref: 'Task'
     }
 }); 
 
