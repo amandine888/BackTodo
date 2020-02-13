@@ -174,7 +174,7 @@ app.route('/listupdate').put(function(req, res){
         if (err)
             res.send(err)
         else{
-            List.updateOne({_id: decoded.id}, {$set: { namelist: req.body.namelist} }, function(err, data){
+            List.updateOne({_id: req.body.id}, {$set: { namelist: req.body.namelist} }, function(err, data){
                 if(err)
                     res.send(err)
                 else{
@@ -191,11 +191,11 @@ app.route('/deletelist/:id').delete(function(req, res){
         if (err)
             res.send(err)
         else{
-            Task.deleteMany({_id: decoded.id}, function(err, data){
+            Task.deleteMany({_id: req.body.id}, function(err, data){
                 if(err)
                     res.send(err)
                 else{
-                    List.deleteOne({_id: decoded.id}, function(err, result){
+                    List.deleteOne({_id: req.body.id}, function(err, result){
                         if(err)
                             res.send(err)
                         else{
@@ -242,7 +242,7 @@ app.route('/taskbyid/:id').get(function(req, res){
         if (err)
             res.send(err)
         else{
-            Task.findOne({_id: decoded.id}).populate('listId[]').exec(function(err, data){
+            Task.findOne({_id: req.body.id}).populate('listId[]').exec(function(err, data){
                 if (err)
                     res.send(err)
                 else{
@@ -260,7 +260,7 @@ app.route('/updatetask').put(function(req, res){
         if (err)
             res.send(err)
         else{
-            Task.updateOne({_id: decoded.id}, {$set: { nametask: req.body.nametask} }, function(err, data){
+            Task.updateOne({_id: req.body.id}, {$set: { nametask: req.body.nametask} }, function(err, data){
                 if(err)
                     res.send(err)
                 else{
@@ -277,7 +277,7 @@ app.route('/deletetask/:id').delete(function(req, res){
         if (err)
             res.send(err)
         else{
-            Task.deleteOne({_id: decoded.id}, function(err, data){
+            Task.deleteOne({_id: req.body.id}, function(err, data){
                 if(err)
                     res.send(err)
                 else{
