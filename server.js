@@ -78,13 +78,13 @@ app.route('/users').get(function(req, res){
     }); 
 }); 
 
-// Route pour mettre à jour l'user + requête : 
+// Route pour mettre à jour l'user + id de la liste requête : 
 app.route('/userupdate').put(function(req, res){
     jwt.verify(req.headers["x-access-token"],"maclefsecrete", function(err, decoded){
         if (err)
                 res.send(err)
         else{
-            User.updateOne({ _id: [decoded.id ]}, { $set: { firstname: req.body.firstname } }, function(err, data){
+            User.updateOne({ _id: decoded.id}, { $set: { listId : req.body['listId[]'] } }, function(err, data){
                 if(err)
                     res.send(err)
                 else{
@@ -101,7 +101,7 @@ app.route('/deleteuser').delete(function(req, res){
         if (err)
                 res.send(err)
         else{
-            User.deleteOne({_id: [decoded.id]}, function(err, data){
+            User.deleteOne({_id: decoded.id}, function(err, data){
                 if(err)
                         res.send(err)
                 else{
@@ -142,7 +142,7 @@ app.route('/findlist').get(function(req, res){
 
 // // Route pour chercher un user dans une liste + requête (recherche par id) : 
 // app.route('/listbyid/:id').get(function(req, res){
-//     List.findOne({_id: req.params.id}).populate('user').exec(function(err, data){
+//     List.findOne({_id: req.params.id}).populate('userId[]').exec(function(err, data){
 //         if (err)
 //             res.send(err)
 //         else{
@@ -157,7 +157,7 @@ app.route('/userbyid/:id').get(function(req, res){
         if (err)
             res.send(err)
         else{
-            User.findOne({_id: [decoded.id]}).populate('list').exec(function(err, data){
+            User.findOne({_id: decoded.id}).populate('listId[]').exec(function(err, data){
                 if (err)
                     res.send(err)
                 else{
@@ -168,13 +168,13 @@ app.route('/userbyid/:id').get(function(req, res){
     }); 
 }); 
 
-// Route pour mettre à jour une liste + requête :  
+// Route pour mettre à jour une liste + son nom requête :  
 app.route('/listupdate').put(function(req, res){
     jwt.verify(req.headers["x-access-token"],"maclefsecrete", function(err, decoded){
         if (err)
             res.send(err)
         else{
-            List.updateOne({_id: [decoded.id]}, {$set: { namelist: req.body.namelist} }, function(err, data){
+            List.updateOne({_id: decoded.id}, {$set: { namelist: req.body.namelist} }, function(err, data){
                 if(err)
                     res.send(err)
                 else{
@@ -186,18 +186,24 @@ app.route('/listupdate').put(function(req, res){
 }); 
 
 // Route supprimer une liste + requête : 
-app.route('/deletelist').delete(function(req, res){
+app.route('/deletelist/:id').delete(function(req, res){
     jwt.verify(req.headers["x-access-token"],"maclefsecrete", function(err, decoded){
         if (err)
             res.send(err)
         else{
-            List.deleteOne({_id: [decoded.id]}, function(err, data){
+            Task.deleteMany({_id: decoded.id}, function(err, data){
                 if(err)
                     res.send(err)
                 else{
-                    res.send(data); 
-                };
-            });
+                    List.deleteOne({_id: decoded.id}, function(err, result){
+                        if(err)
+                            res.send(err)
+                        else{
+                            res.send(result); 
+                        };
+                    });
+                }; 
+            }); 
         };
     });
 }); 
@@ -210,7 +216,7 @@ app.route('/createtask').post(function(req, res){
         else{
             let task = new Task({ 
                 nametask: req.body.nametask, 
-                listId: [decode.id],
+                listId: [decoded.id],
             })
             task.save(function(err, data){
                 if(err)
@@ -236,7 +242,7 @@ app.route('/taskbyid/:id').get(function(req, res){
         if (err)
             res.send(err)
         else{
-            Task.findOne({_id: [decoded.id]}).populate('List').exec(function(err, data){
+            Task.findOne({_id: decoded.id}).populate('listId[]').exec(function(err, data){
                 if (err)
                     res.send(err)
                 else{
@@ -254,7 +260,7 @@ app.route('/updatetask').put(function(req, res){
         if (err)
             res.send(err)
         else{
-            Task.updateOne({_id: [decoded.id]}, {$set: { nametask: req.body.nametask} }, function(err, data){
+            Task.updateOne({_id: decoded.id}, {$set: { nametask: req.body.nametask} }, function(err, data){
                 if(err)
                     res.send(err)
                 else{
@@ -266,12 +272,12 @@ app.route('/updatetask').put(function(req, res){
 }); 
 
 // Route pour supprimer une tâche + requête : 
-app.route('/deletetask').delete(function(req, res){
+app.route('/deletetask/:id').delete(function(req, res){
     jwt.verify(req.headers["x-access-token"],"maclefsecrete", function(err, decoded){
         if (err)
             res.send(err)
         else{
-            Task.deleteOne({_id: [decoded.id]}, function(err, data){
+            Task.deleteOne({_id: decoded.id}, function(err, data){
                 if(err)
                     res.send(err)
                 else{
