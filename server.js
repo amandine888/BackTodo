@@ -1,4 +1,4 @@
-// Déclarations des dépendances
+// Déclarations des dépendances : 
 
 const express = require('express'),
     bodyParser = require('body-parser'),
@@ -7,24 +7,24 @@ const express = require('express'),
     jwt = require('jsonwebtoken'),
     app = express();
 
-// parse application/x-www-form-urlencoded
+// parse application/x-www-form-urlencoded : 
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-// Initialisation de la connexion a la base de données
+// Initialisation de la connexion a la base de données : 
 mongoose.connect('mongodb://localhost/todoList', {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
 
-// Récuperation des models
+// Récuperation des models : 
 let User = require('./models/user');
 let List = require('./models/list'); 
 let Task = require('./models/task')
 
-// Déclarations des routes de notre application
+// Déclarations des routes de notre application : 
 app.route('/').get(function(req, res) {
     res.send('hello world !');
 });
 
-//Route register + requête : 
+// Route register + requête : 
 app.route ('/register').post(function(req, res){
     bcrypt.hash(req.body.password, 10, function(err, hash) {
         let user = new User ({
@@ -47,7 +47,6 @@ app.route ('/register').post(function(req, res){
 
 // Route connexion + requête : 
 app.route('/connexion').post(function(req, res){
-    // res.send('Salut'),
     User.findOne({email: req.body.email}, function(err, data){
         if (data){
             bcrypt.compare(req.body.password, data.password, function(err, result) {
@@ -65,15 +64,22 @@ app.route('/connexion').post(function(req, res){
     }); 
 });
 
-// Route pour trouver tous les users + requête: 
+// Route admin + requête : 
+app.route('adminanduser').post(function(req, res){
+})
+
+// Route user + requête : 
+app.route('adminanduser').post(function(req, res){
+})
+
+// Route pour trouver tous les users + requête : 
 app.route('/users').get(function(req, res){
     User.find({}, function(err, data){
         res.send(data); 
     }); 
 }); 
 
-// Route pour update l'user + requête: 
-
+// Route pour mettre à jour l'user + requête : 
 app.route('/userupdate').put(function(req, res){
     User.updateOne({ _id: req.body.id }, { $set: { firstname: req.body.firstname } }, function(err, data){
         if(err)
@@ -84,7 +90,7 @@ app.route('/userupdate').put(function(req, res){
     });
     }); 
 
-// Route pour delete l'user + requête : 
+// Route pour supprimer l'user + requête : 
 app.route('/deleteuser').delete(function(req, res){
     User.deleteOne({_id: req.body.id}, function(err, data){
         if(err)
@@ -124,7 +130,7 @@ app.route('/findlist').get(function(req, res){
     }); 
 }); 
 
-// // Route pour chercher un user dans une liste + requête: 
+// // Route pour chercher un user dans une liste + requête (recherche par id) : 
 // app.route('/listbyid/:id').get(function(req, res){
 //     List.findOne({_id: req.params.id}).populate('user').exec(function(err, data){
 //         if (err)
@@ -135,7 +141,7 @@ app.route('/findlist').get(function(req, res){
 //     });
 // }); 
 
-// Route pour chercher une liste dans un user + requête: 
+// Route pour chercher une liste dans un user + requête (recherche par id) : 
 app.route('/userbyid/:id').get(function(req, res){
     User.findOne({_id: req.params.id}).populate('list').exec(function(err, data){
         if (err)
@@ -146,7 +152,7 @@ app.route('/userbyid/:id').get(function(req, res){
     }); 
 }); 
 
-// Route pour mettre à jour une liste + requête:  
+// Route pour mettre à jour une liste + requête :  
 app.route('/listupdate').put(function(req, res){
     List.updateOne({_id: req.body.id}, {$set: { namelist: req.body.namelist} }, function(err, data){
         if(err)
@@ -157,7 +163,7 @@ app.route('/listupdate').put(function(req, res){
     })
 }); 
 
-// Route supprimer une liste + requête: 
+// Route supprimer une liste + requête : 
 app.route('/deletelist').delete(function(req, res){
     List.deleteOne({_id: req.body.id}, function(err, data){
         if(err)
@@ -168,7 +174,7 @@ app.route('/deletelist').delete(function(req, res){
     })
 }); 
 
-// Route pour créer une tâche + requête: 
+// Route pour créer une tâche + requête : 
 app.route('/createtask').post(function(req, res){
     let task = new Task({ 
         nametask: req.body.nametask, 
@@ -183,17 +189,26 @@ app.route('/createtask').post(function(req, res){
     }); 
 }); 
 
-// Route pour chercher toutes les tâches : 
+// Route pour chercher toutes les tâches + requête : 
 app.route('/findtask').get(function(req, res){
     Task.find({}, function(err, data){
         res.send(data); 
     }); 
 }); 
 
-// Route pour trouver un id de list dans tâche : 
+// Route pour trouver une list dans tâche + requête (recherche par id) : 
+app.route('/taskbyid/:id').get(function(req, res){
+    Task.findOne({_id: req.params.id}).populate('List').exec(function(err, data){
+        if (err)
+            res.send(err)
+        else{
+            res.send(data)
+    }; 
+    }); 
+}); 
 
 
-// Route pour mettre à jour une tâche + requête: 
+// Route pour mettre à jour une tâche + requête : 
 app.route('/updatetask').put(function(req, res){
     Task.updateOne({_id: req.body.id}, {$set: { nametask: req.body.nametask} }, function(err, data){
         if(err)
@@ -204,7 +219,7 @@ app.route('/updatetask').put(function(req, res){
     })
 }); 
 
-// Route pour supprimer une tâche + requête: 
+// Route pour supprimer une tâche + requête : 
 app.route('/deletetask').delete(function(req, res){
     Task.deleteOne({_id: req.body.id}, function(err, data){
         if(err)

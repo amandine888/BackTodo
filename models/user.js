@@ -8,7 +8,14 @@ let userSchema = new mongoose.Schema({
 
     lastname: {
         type: 'string', 
-        require: 'You need to specify a lastname'
+        required: 'You need to specify a lastname'
+    },
+
+    role: {
+        type: 'number',
+        enum: [1, 2],
+        // required: 'You need to specify', 
+        default: 1, 
     },
 
     email: {
